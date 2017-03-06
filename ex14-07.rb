@@ -102,10 +102,6 @@ def input_students
   end
 end
 
-def push_hash_to_array(name = name, cohort = :november)
-  @students << {name: name, cohort: cohort}
-end
-
 def show_students
   print_header; print_student_list; print_footer
 end
@@ -124,21 +120,19 @@ def print_footer
 end
 
 def save_students(filename = "students.csv")
-  file = CSV.open(filename, "w") do |name, cohort|
+  CSV.open(filename, "w") do |file|
     @students.each do |student|
       student_data = [student[:name], student[:cohort]]
-      puts student_data
-      csv_line = student_data.join(",")
-      file << csv_line
+      file << student_data
     end
   end
   puts "Saved File to #{filename}"
 end
 
 def load_students(filename = "students.csv")
-  CSV.foreach(filename, "r") do |x, y|
-    name, cohort = x, y
-    @students << {name: name, cohort: :cohort}
+  CSV.foreach(filename, "r") do |name, cohort|
+    name, cohort = name, cohort
+    @students << {name: name, cohort: cohort.to_sym}
   end
   puts "Loaded #{@students.count} students from #{filename}"
 end
